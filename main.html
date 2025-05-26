@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FTP</title>
+  <style>
+    body { font-family: monospace; background-color: #f4f4f4; padding: 20px; }
+    a { color: blue; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h2>Index of /</h2>
+  <div id="file-list">Loading...</div>
+
+  <script>
+    const user = "bkthsa";
+    const repo = "xposed";
+    const path = ""; // root path
+
+    fetch(`https://api.github.com/repos/${user}/${repo}/contents/${path}`)
+      .then(res => res.json())
+      .then(files => {
+        const container = document.getElementById("file-list");
+        container.innerHTML = "";
+        files.forEach(file => {
+          const a = document.createElement("a");
+          a.href = file.download_url || file.html_url;
+          a.textContent = file.name + (file.type === "dir" ? "/" : "");
+          a.target = "_blank";
+          container.appendChild(a);
+          container.appendChild(document.createElement("br"));
+        });
+      })
+      .catch(err => {
+        document.getElementById("file-list").textContent = "Error loading files.";
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
